@@ -5,13 +5,17 @@ const morgan = require('morgan');
 const passport = require("passport") ;
 const Op = require('sequelize');
 const cron = require('node-cron');
+const cors = require('cors');
 require("./src/config/passport")
 
 const app = express()
+
+app.use(cors());
+
 app.use(express.json())
 app.use(morgan('dev'));
 app.use(passport.initialize())
-const port = 3000
+const port = 5000
 
 // Swagger api docs
 const swaggerUi = require('swagger-ui-express');
@@ -49,5 +53,5 @@ cron.schedule('0 0 * * *', async () => {
 });
 
 app.listen(port, () => {
-  console.log(`Running on port: ${port}`)
+  console.log(`Running on http://localhost:${port}`)
 })
