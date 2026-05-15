@@ -4,6 +4,8 @@ import CoursesPage from "./pages/public/CoursesPage"
 import PlatformPage from "./pages/public/PlatformPage"
 import JobBoardPage from "./pages/public/JobBoardPage"
 import PublicLayout from "./components/layout/PublicLayout"
+import LoginSuccessPage from "./pages/public/LoginSuccessPage"
+import OAuthErrorPage from "./pages/public/OAuthErrorPage"
 function App() {
   return (
    <Routes>
@@ -13,6 +15,8 @@ function App() {
       <Route path="/platform" element={<PlatformPage />} />
       <Route path="/jobs" element={<JobBoardPage />} />
     </Route>
+    <Route path="/login-success" element={<LoginSuccessPage />} />
+    <Route path="/oauth-error" element={<OAuthErrorPage />} />
    </Routes>
   )
 }
