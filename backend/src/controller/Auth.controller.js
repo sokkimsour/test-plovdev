@@ -72,7 +72,7 @@ const register = async (req, res) => {
       email,
       password: hashPassword,
       gender,
-      role: "teacher",
+      role: "user",
       auth_provider : "local"
     });
 

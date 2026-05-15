@@ -76,10 +76,10 @@ const updateCourse = async (req, res) => {
     const teacherId = req.user.id;
 
     // CHECK IF USER IS TEACHER
-    if (req.user.role !== "teacher") {
+    if (req.user.role !== "user") {
       return res
         .status(403)
-        .json({ message: "Only teachers can update a course!" });
+        .json({ message: "Only users can update a course!" });
     }
 
     // FIND COURSE
@@ -277,8 +277,8 @@ const getTeacherCourses = async (req, res) => {
     const teacherId = req.user.id
 
     // CHECK IF USER IS TEACHER
-    if (req.user.role !== 'teacher') {
-      return res.status(403).json({ message: 'Only teachers can view their courses!' })
+    if (req.user.role !== 'user') {
+      return res.status(403).json({ message: 'Only users can view their courses!' })
     }
 
     const teacherCourses = await courses.findAll({
