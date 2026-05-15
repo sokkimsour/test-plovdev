@@ -3,6 +3,7 @@ const { Users, OtpCode, refreshTokens } = require("../models");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const validator = require("validator");
+const frontendURL = process.env.CLIENT_URL || "http://localhost:5173";
 
 const { generateUsername, generateOtp } = require("../utils/generateForUser");
 const sendEmail = require("../utils/sendEmail");
@@ -465,7 +466,7 @@ const loginWIthGoogle = async (req , res) => {
     }
 
     // generate access token
-    const accesstoken = jwt.sign({id : user.id , role : user.role} , 
+    const accessToken = jwt.sign({id : user.id , role : user.role} , 
       process.env.JWT_SECRET , {
         expiresIn : process.env.JWT_EXPIRES_IN
       }
@@ -486,10 +487,10 @@ const loginWIthGoogle = async (req , res) => {
     })
 
     // redirect to frontend
-    res.redirect(`http://localhost:5173/login-success?token=${token}&refreshToken=${refreshToken}`);
+    res.redirect(`${frontendURL}/login-success?token=${encodeURIComponent(accessToken)}&refreshToken=${encodeURIComponent(refreshToken)}`);
     
   } catch (error) {
-    res.redirect(`http://localhost:5173/login?error=server_error`);
+    res.redirect(`${frontendURL}/oauth-error?error=server_error`);
   } 
 }
 

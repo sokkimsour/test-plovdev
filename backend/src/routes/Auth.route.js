@@ -4,6 +4,7 @@ const { register , login , logout , refreshToken , getMe , forgotPassword , veri
 const { loginLimiter } = require('../middlewares/rateLimits');
 const { authenticateToken } = require('../middlewares/authMiddleWare');
 const passport = require('passport');
+const frontendURL = process.env.CLIENT_URL || 'http://localhost:5173';
 
 router.post('/auth/register', /* #swagger.tags = ['Auth'] */  register);
 router.post('/auth/refreshtoken',  /* #swagger.tags = ['Auth'] */  refreshToken);
@@ -12,9 +13,22 @@ router.post('/auth/logout',  /* #swagger.tags = ['Auth'] */  authenticateToken ,
 router.get('/users/me'  /* #swagger.tags = ['Auth'] */, authenticateToken , getMe);
 
 // LOGIN WITH GOOGLE
-router.get("/auth/google/callback" ,  /* #swagger.tags = ['Auth'] */  passport.authenticate('google', { scope: ['profile', 'email'] 
- , session: false, failureRedirect: 
- '/http://localhost:5173/login' }) , loginWIthGoogle)
+// 1. START GOOGLE LOGIN (This was missing!)
+// This is the route your frontend button should point to.
+router.get('/auth/google', passport.authenticate('google', { 
+  scope: ['profile', 'email'], 
+  session: false 
+}));
+
+// 2. GOOGLE CALLBACK
+// Google sends the user back here after they log in.
+router.get("/auth/google/callback", 
+  passport.authenticate('google', { 
+    session: false, 
+    failureRedirect: `${frontendURL}/oauth-error?error=auth_failed`
+  }), 
+  loginWIthGoogle
+);
 
 router.post('/auth/change-password',  /* #swagger.tags = ['Auth'] */ authenticateToken ,changePassword)  ;
 
