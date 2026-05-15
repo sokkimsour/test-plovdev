@@ -341,54 +341,55 @@ const verifyForgotOtp = async (req, res) => {
 // RESET PASSWORD
 const resetPassword = async (req, res) => {
   try {
-    const { resetToken, newPassword } = req.body
+    const { resetToken, newPassword } = req.body;
 
-    if (!userId || !newPassword) {
-      return res.status(400).json({ message: 'Please provide userId and new password!' })
+    // CHECK INPUT
+    if (!resetToken || !newPassword) {
+      return res.status(400).json({
+        message: "Please provide resetToken and new password!",
+      });
     }
 
-    // VALIDATE NEW PASSWORD
-    if (!validator.isStrongPassword(newPassword, {
-      minLength: 8,
-      minUppercase: 0,
-      minLowercase: 0,
-      minNumbers: 0,
-      minSymbols: 0
-    })) {
-      return res.status(400).json({ message: 'Weak password: at least 8 characters!' })
-    }
+    // VERIFY TOKEN
+    const decoded = jwt.verify(
+      resetToken,
+      process.env.JWT_SECRET
+    );
 
-    let userId ;
-    try {
-      const decode = jwt.verify(resetToken , process.env.JWT_SECRET )
-      userId = decode.userId
-    } catch (error) {
-      return res.status(400).json({message : "Invalid or expired reset token!"})
-    }
+    const userId = decoded.userId;
 
-    // CHECK IF USER EXISTS
-    const user = await Users.findOne({ where: { id: userId } , attributes : ["id"] })
+    // FIND USER
+    const user = await Users.findByPk(userId);
+
     if (!user) {
-      return res.status(404).json({ message: 'User not found!' })
+      return res.status(404).json({
+        message: "User not found!",
+      });
     }
 
     // HASH NEW PASSWORD
-    const hashPassword = await bcrypt.hash(newPassword, 10)
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
 
     // UPDATE PASSWORD
-    await Users.update(
-      { password: hashPassword },
-      { where: { id: userId } }
-    )
+    await user.update({
+      password: hashedPassword,
+    });
 
-     await refreshToken.destroy({where : {userId}})
+    // DELETE OLD REFRESH TOKENS
+    await refreshTokens.destroy({
+      where: { userId },
+    });
 
-    res.json({ message: 'Password reset successfully. Please login again.' })
+    res.json({
+      message: "Password reset successfully!",
+    });
 
   } catch (error) {
-    res.status(500).json({ messageError: error.message })
+    res.status(500).json({
+      messageError: error.message,
+    });
   }
-}
+};
 
 // REFRESH TOKEN
 const refreshToken = async (req, res) => {
