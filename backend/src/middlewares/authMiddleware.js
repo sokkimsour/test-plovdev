@@ -41,18 +41,18 @@ const isAdmin = async (req, res, next) => {
 };
 
 const isTeacher = async (req, res, next) => {
-  if (req.user.role !== "teacher") {
+  if (req.user.role !== "user") {
     return res.status(403).json({
-      message: "Access denied! , Only teacher can access.",
+      message: "Access denied! , Only user can access.",
     });
   }
   next();
 };
 
 const isTeacherOrAdmin = async (req, res, next) => {
-  if (req.user.role !== 'teacher' && req.user.role !== 'admin') {
+  if (req.user.role !== 'user' && req.user.role !== 'admin') {
     return res.status(403).json({
-      message: 'Access denied! Only teacher or admin can access.'
+      message: 'Access denied! Only user or admin can access.'
     })
   }
   next()
@@ -82,8 +82,8 @@ const isEnrolled = async (req, res, next) => {
 // CHECK IF STUDENT IS ENROLLED IN COURSE AND FOR TEACHER, ADMIN CAN ACCESS 
 const isEnrolledOrTeacher = async (req, res, next) => {
   try {
-    // teacher and addmin can always access their own lessons
-    if (req.user.role === 'teacher' || req.user.role === 'admin') {
+    // course owner role and admin can always access their own lessons
+    if (req.user.role === 'user' || req.user.role === 'admin') {
       return next()
     }
 

@@ -26,7 +26,7 @@ module.exports = {
   down: async (queryInterface, Sequelize) => {
     await queryInterface.sequelize.query(`ALTER TABLE "Users" DROP COLUMN "role";`);
     await queryInterface.sequelize.query(`DROP TYPE IF EXISTS "enum_Users_role";`);
-    await queryInterface.sequelize.query(`CREATE TYPE "enum_Users_role" AS ENUM('student', 'teacher', 'admin');`);
-    await queryInterface.sequelize.query(`ALTER TABLE "Users" ADD COLUMN "role" "enum_Users_role" NOT NULL DEFAULT 'student';`);
+    await queryInterface.sequelize.query(`CREATE TYPE "enum_Users_role" AS ENUM('admin', 'user');`);
+    await queryInterface.sequelize.query(`ALTER TABLE "Users" ADD COLUMN "role" "enum_Users_role" NOT NULL DEFAULT 'user';`);
   }
 };

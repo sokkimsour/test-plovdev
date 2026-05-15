@@ -15,9 +15,9 @@ module.exports = {
     })
 
     await queryInterface.changeColumn('Users', 'role', {
-      type: Sequelize.ENUM('student', 'teacher', 'admin'),
+      type: Sequelize.ENUM('user', 'admin'),
       allowNull: false,
-      defaultValue: 'student'
+      defaultValue: 'user'
     })
 
     await queryInterface.addColumn('Users', 'language_pref', {
@@ -39,9 +39,9 @@ module.exports = {
     })
 
     await queryInterface.changeColumn('Users', 'role', {
-      type: Sequelize.ENUM('student', 'teacher', 'admin'),
+      type: Sequelize.ENUM('user', 'admin'),
       allowNull: true,
-      defaultValue: 'student'
+      defaultValue: 'user'
     })
 
     await queryInterface.removeColumn('Users', 'language_pref')
