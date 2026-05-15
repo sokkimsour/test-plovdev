@@ -13,7 +13,7 @@ module.exports = {
   // 2. Now that the type is fixed, set the default value
   await queryInterface.sequelize.query(`
     ALTER TABLE "Users" 
-    ALTER COLUMN "role" SET DEFAULT 'user';
+    ALTER COLUMN "role" SET DEFAULT 'User';
   `);
   },
 
@@ -22,8 +22,8 @@ module.exports = {
     await queryInterface.changeColumn("Users", "role", { type: Sequelize.STRING });
     await queryInterface.sequelize.query('DROP TYPE IF EXISTS "enum_Users_role";');
     await queryInterface.changeColumn("Users", "role", {
-      type: Sequelize.ENUM("admin", "teacher"),
-      defaultValue: "teacher",
+      type: Sequelize.ENUM("Admin", "Teacher"),
+      defaultValue: "Teacher",
     });
   }
 };
